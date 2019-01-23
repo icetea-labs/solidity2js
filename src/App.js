@@ -45,6 +45,7 @@ class App extends Component {
             showPrintMargin={false}
             showGutter={false}
             name="solidityPane"
+            editorProps={{$blockScrolling: true}}
           />
         </section>
         <section className="pane">
@@ -59,6 +60,7 @@ class App extends Component {
             showPrintMargin={false}
             showGutter={false}
             name="jsPane"
+            editorProps={{$blockScrolling: true}}
           />
         </section>
       </Split>
