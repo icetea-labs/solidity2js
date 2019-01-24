@@ -23,9 +23,10 @@ export function compile(soliditySrc) {
         const jsSrc = jsGenerator(ast);
 
         // format code to make it looks nice
-        const formattedSrc =  prettier.format(jsSrc, prettierOptions)
+        // const formattedSrc =  prettier.format(jsSrc, prettierOptions)
 
-        return formattedSrc;
+        // return formattedSrc;
+        return jsSrc;
 
     } catch (e) {
         return String(e);
