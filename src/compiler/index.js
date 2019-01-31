@@ -1,7 +1,8 @@
 import parser from 'solidity-parser-antlr';
-import jsGenerator from './jsGenerator'
-import PluginArray from './plugins';
+import generate from '@babel/generator';
+import * as t from "@babel/types";
 import prettier from "prettier/standalone";
+import transformer from './transformer';
 
 const prettierOptions = {
     parser: "babel",
@@ -11,30 +12,20 @@ const prettierOptions = {
 export function compile(soliditySrc) {
     try {
 
-        // Parse solidity source into a tree
-        const ast = parser.parse(soliditySrc);
+        const solidityAst = parser.parse(soliditySrc);
+        console.log(solidityAst);
 
-        // Apply plugins to the tree
-        applyPlugins(parser, ast, PluginArray);
+        const JsAst = transformer(solidityAst);
+        console.log(JsAst)
 
-        console.log(ast);
-
-        // Convert the tree to JS source
-        const jsSrc = jsGenerator(ast);
-
-        // format code to make it looks nice
-        // const formattedSrc =  prettier.format(jsSrc, prettierOptions)
-
-        // return formattedSrc;
+        const jsSrc = generate(JsAst).code;
         return jsSrc;
+        // const formattedSrc =  prettier.format(jsSrc, prettierOptions)
+        // return formattedSrc;
+
 
     } catch (e) {
         return String(e);
     }
 }
 
-function applyPlugins(parser, ast, plugins) {
-    plugins.forEach((plugin => {
-        parser.visit(ast, plugin);
-    }))
-}

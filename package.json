@@ -25,5 +25,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "@babel/generator": "^7.3.0",
+    "@babel/types": "^7.3.0"
+  }
 }
