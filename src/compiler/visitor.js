@@ -1,5 +1,5 @@
 import { variableDeclarator, variableDeclaration, identifier, classDeclaration, classBody, classProperty, 
-        classPrivateProperty , PrivateName} from "@babel/types";
+        classPrivateProperty , PrivateName, numericLiteral, stringLiteral} from "@babel/types";
 
 export default {
     PragmaDirective: function(node, parent) {
@@ -16,38 +16,51 @@ export default {
             undefined,
             classBody([])
         )
-        console.log(classNode)
         node._context = classNode.body.body	;
         parent._context.push(classNode)
     },
     StateVariableDeclaration: function (node, parent) {
         let visibility = node.variables[0].visibility;
         if ( visibility === 'private') {
-            let privateProp = classPrivateProperty(
+            const privateProp = classPrivateProperty(
                 PrivateName(
                     identifier('')
                 )
             );
             parent._context.push(privateProp);
-            node.value = privateProp.value;
-            node.name = privateProp.key.id.name;
+            node.id = privateProp.key.id ;
+            node.alias = privateProp; // referernce to privateProp node which is in the Js AST
         }
         else {
             // ONLY support Identifier at the moment
-            let prop = classProperty(
+            const prop = classProperty(
                 identifier('')
             );
             parent._context.push(prop);
-            node.value = prop.value;
-            node.name = prop.key.name;
+            node.alias = prop;
+            node.id = prop.key;
             
         }
 
     },
-    // VariableDeclaration: function (node, parent) {
-    //     parent.name = node.name;
-    //     parent.value = 
-    // }
+    VariableDeclaration: function (node, parent) {
+
+        parent.id.name = node.name;
+        node.alias = parent.alias
+
+    },
+    NumberLiteral: function (node, parent) {
+        let number = parseInt(node.number);
+        console.log(parent)
+        parent.alias.value = numericLiteral(number)
+    },
+    // StringLiteral: function (node, parent) {
+    //     // console.log(node.value)
+    //     // console.log(parent.alias)
+    //     // console.log('end')
+    //     parent.alias.value = stringLiteral(node.value)
+    // },
+
 }   
 /**
 Tasks:
