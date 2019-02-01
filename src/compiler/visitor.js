@@ -66,4 +66,5 @@ export default {
 Tasks:
 + Struct - user defined type name
 + At the moment, every variable doesn't have a TYPE 
++ Need a new approach, the current one is suck; Need to rewrite Visit function
  */
