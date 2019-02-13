@@ -13,10 +13,10 @@ export function compile(soliditySrc) {
     try {
 
         const solidityAst = parser.parse(soliditySrc);
-        console.log(solidityAst);
+
 
         const JsAst = transformer(solidityAst);
-        console.log(JsAst)
+
 
         const jsSrc = generate(JsAst).code;
         return jsSrc;

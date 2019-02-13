@@ -20,46 +20,40 @@ export default {
         parent._context.push(classNode)
     },
     StateVariableDeclaration: function (node, parent) {
+        node._context = {};
+    },
+    'StateVariableDeclaration:exit': function (node, parent) {
         let visibility = node.variables[0].visibility;
         if ( visibility === 'private') {
             const privateProp = classPrivateProperty(
                 PrivateName(
-                    identifier('')
-                )
+                    identifier(node._context.name)
+                ),
+                node._context.value
             );
             parent._context.push(privateProp);
-            node.id = privateProp.key.id ;
-            node.alias = privateProp; // referernce to privateProp node which is in the Js AST
         }
         else {
             // ONLY support Identifier at the moment
             const prop = classProperty(
-                identifier('')
+                identifier(node._context.name),
+                node._context.value
             );
             parent._context.push(prop);
-            node.alias = prop;
-            node.id = prop.key;
-            
         }
-
     },
     VariableDeclaration: function (node, parent) {
-
-        parent.id.name = node.name;
-        node.alias = parent.alias
-
+        parent._context.name = node.name;
+        node._context = parent._context
     },
     NumberLiteral: function (node, parent) {
         let number = parseInt(node.number);
-        console.log(parent)
-        parent.alias.value = numericLiteral(number)
+        parent._context.value = numericLiteral(number)  
     },
-    // StringLiteral: function (node, parent) {
-    //     // console.log(node.value)
-    //     // console.log(parent.alias)
-    //     // console.log('end')
-    //     parent.alias.value = stringLiteral(node.value)
-    // },
+    StringLiteral: function (node, parent) {
+        let string = node.value;
+        parent._context.value = stringLiteral(string)
+    },
 
 }   
 /**
