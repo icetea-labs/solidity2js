@@ -11,34 +11,30 @@ function traverser(ast, visitor) {
   }
   function traverseNode(node, parent) {
     if (!_isASTNode(node)) return
-    let methods = visitor[node.type];
-    if (methods)
-      methods(node, parent)
-    
-    switch (node.type) {
-      case 'SourceUnit':
-        traverseArray(node.children, node);
-        break;
-      case 'ContractDefinition':
-        traverseArray(node.subNodes, node);
-        break;
-      case 'StateVariableDeclaration':
-        traverseArray(node.variables, node);
-        traverseNode(node.initialValue, node)
-        break;
-      case 'VariableDeclaration':
-      case 'StringLiteral':
-      case 'NumberLiteral':
-      case 'PragmaDirective':
-        break;
-      default:
-        console.log(node.type)
-        throw new TypeError(node.type);
+
+    const method = visitor[node.type];
+    if (method)
+      method(node, parent)
+
+    traverseNode.operationsByType[node.type](node)
+
+    const selector = node.type + ':exit';
+    const exitMethod = visitor[selector];
+    if (exitMethod) {
+      exitMethod(node, parent)
     }
-    const selector = node.type + ':exit'
-    if (visitor[selector]) {
-      visitor[selector](node, parent)
-    }
+  }
+  traverseNode.operationsByType = {
+    SourceUnit: (node) => traverseArray(node.children, node),
+    ContractDefinition: (node) => traverseArray(node.subNodes, node),
+    StateVariableDeclaration: (node) => {
+      traverseArray(node.variables, node);
+      traverseNode(node.initialValue, node)
+    },
+    PragmaDirective: () => {},
+    VariableDeclaration: () => {},
+    NumberLiteral: () => {},
+    StringLiteral: () => {},
   }
   traverseNode(ast, null);
 
