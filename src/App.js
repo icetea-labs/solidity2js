@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import logo from './logo.svg';
 import './App.css';
 import Split from 'react-split'
-import brace from 'brace';
+
 
 import AceEditor from 'react-ace'
 

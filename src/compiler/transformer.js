@@ -16,8 +16,12 @@ function traverser(ast, visitor) {
     if (method)
       method(node, parent)
 
-    traverseNode.operationsByType[node.type](node)
-
+    try {
+      traverseNode.operationsByType[node.type](node)
+    } catch (error) {
+      console.log(`missing ${node.type} case in traverseNode.operationsByType`)
+      console.log(error)
+    }
     const selector = node.type + ':exit';
     const exitMethod = visitor[selector];
     if (exitMethod) {
@@ -31,10 +35,27 @@ function traverser(ast, visitor) {
       traverseArray(node.variables, node);
       traverseNode(node.initialValue, node)
     },
+    FunctionDefinition: (node) => {
+      traverseArray(node.parameters.parameters, node);
+      traverseArray(node.body.statements, node)
+    },
+    ExpressionStatement: (node) => {
+      traverseNode(node.expression, node)
+    },
+    BinaryOperation: (node) => {
+      traverseNode(node.left, node);
+      traverseNode(node.right, node);	
+    },
+    Identifier: () => {},
+    MemberAccess: (node) => {
+      traverseNode(node.expression, node)
+    },
     PragmaDirective: () => {},
     VariableDeclaration: () => {},
     NumberLiteral: () => {},
     StringLiteral: () => {},
+    ElementaryTypeName: () => {},
+    Parameter: () => {},
   }
   traverseNode(ast, null);
 
