@@ -42,6 +42,10 @@ function traverser(ast, visitor) {
     ExpressionStatement: (node) => {
       traverseNode(node.expression, node)
     },
+    VariableDeclarationStatement: (node) => {
+      traverseArray(node.variables, node);
+      traverseNode(node.initialValue, node)
+    },
     ReturnStatement: (node) => {
       traverseNode(node.expression, node)
     },
@@ -49,15 +53,21 @@ function traverser(ast, visitor) {
       traverseNode(node.left, node);
       traverseNode(node.right, node);	
     },
+    UnaryOperation: (node) => {
+      traverseNode(node.subExpression, node);
+    },
     Identifier: () => {},
     MemberAccess: (node) => {
       traverseNode(node.expression, node)
     },
     PragmaDirective: () => {},
-    VariableDeclaration: () => {},
+    VariableDeclaration: (node) => {
+      traverseNode(node.typeName, node)
+    },
+    UserDefinedTypeName: function(){},
+    ElementaryTypeName: () => {},
     NumberLiteral: () => {},
     StringLiteral: () => {},
-    ElementaryTypeName: () => {},
     Parameter: () => {},
   }
   traverseNode(ast, null);

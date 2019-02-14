@@ -1,7 +1,8 @@
 import { identifier, classDeclaration, classBody, classProperty, 
         classPrivateProperty , PrivateName, numericLiteral, stringLiteral,
-        classMethod, blockStatement, binaryExpression,
-        assignmentExpression, expressionStatement, memberExpression, returnStatement} from "@babel/types";
+        classMethod, blockStatement, binaryExpression,updateExpression,
+        assignmentExpression, expressionStatement, memberExpression, returnStatement,
+        variableDeclaration, variableDeclarator} from "@babel/types";
 
 export default {
     PragmaDirective: function(node, parent) {
@@ -44,9 +45,39 @@ export default {
             parent._context.push(prop);
         }
     },
+    VariableDeclarationStatement: function (node, parent) {
+        node._context = [];
+    },
+    'VariableDeclarationStatement:exit': function (node, parent) {
+        
+        let type = node._context.type;
+        switch (type) {
+            case 'ElementaryTypeName':
+                let varNode = variableDeclaration(
+                    'var', 
+                    [variableDeclarator(
+                        identifier(node._context.name) , 
+                        node._context[0]
+                    )]
+                )
+                parent._context.block.push(varNode)
+                break;
+        
+            default:
+                break;
+        }
+        
+
+    },
     VariableDeclaration: function (node, parent) {
         parent._context.name = node.name;
         node._context = parent._context
+    },
+    UserDefinedTypeName: function (node, parent) {
+        parent._context.type = node.namePath;
+    },
+    ElementaryTypeName: function (node, parent) {
+        parent._context.type = node.type;
     },
     NumberLiteral: function (node, parent) {
         let number = parseInt(node.number);
@@ -72,7 +103,6 @@ export default {
                 identifier("constructor"),
                 node._context.params,
                 blockStatement(node._context.block)
-
             );
         }
         else {
@@ -81,7 +111,6 @@ export default {
                 identifier(node.name),
                 node._context.params,
                 blockStatement(node._context.block)
-
             );
         }
         parent._context.push(methodNode)
@@ -89,12 +118,11 @@ export default {
     Parameter: function (node, parent) {
         parent._context.params.push(identifier(node.name));
     },
-    
     ExpressionStatement: function(node, parent) {
         node._context = [];
     },
     'ExpressionStatement:exit': function(node, parent) {
-        parent._context.block.push(node._context[0])
+        parent._context.block.push(expressionStatement(node._context[0]))
     },
     BinaryOperation: function(node, parent) {
         node._context = [];
@@ -102,9 +130,7 @@ export default {
     'BinaryOperation:exit': function(node, parent) {
         switch (node.operator) {
             case '=':
-                let expressionNode = expressionStatement(
-                    assignmentExpression('=',node._context[0],node._context[1])
-                )
+                let expressionNode = assignmentExpression('=',node._context[0],node._context[1])
                 parent._context.push(expressionNode);
                 break;
             case '+':
@@ -135,10 +161,29 @@ export default {
     },
     'ReturnStatement:exit': function(node, parent) {
         parent._context.block.push(returnStatement(node._context[0]))
+    },
+    UnaryOperation: function (node, parent) {
+        node._context = [];
+    },
+    'UnaryOperation:exit': function (node, parent) {
+        switch (node.operator) {
+            case '++':
+                parent._context.push(updateExpression('++', node._context[0]))
+                break;
+            case '--':
+                parent._context.push(updateExpression('--', node._context[0]))
+                break;
+            default:
+                break;
+        }
     }
+}
 
 
-}   
+
+
+
+
 /**
 Tasks:
 + Struct - user defined type name
