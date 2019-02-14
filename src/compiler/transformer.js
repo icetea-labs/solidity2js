@@ -1,7 +1,6 @@
 import {file, program} from "@babel/types";
-// import visitor from './visitor';
 import visitor from './Visitors'
-console.log(visitor)
+
 function _isASTNode(node) {
   return !!node && typeof node === 'object' && node.hasOwnProperty('type')
 }
