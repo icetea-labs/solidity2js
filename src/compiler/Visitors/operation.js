@@ -24,12 +24,13 @@ export default {
         node._context = [];
     },
     'UnaryOperation:exit': function (node, parent) {
+        var prefix = node.isPrefix;
         switch (node.operator) {
             case '++':
-                parent._context.push(updateExpression('++', node._context[0]))
+                parent._context.push(updateExpression('++', node._context[0], prefix))
                 break;
             case '--':
-                parent._context.push(updateExpression('--', node._context[0]))
+                parent._context.push(updateExpression('--', node._context[0], prefix))
                 break;
             default:
                 break;

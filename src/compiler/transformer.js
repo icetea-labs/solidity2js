@@ -38,11 +38,22 @@ function traverser(ast, visitor) {
       traverseNode(node.initialValue, node)
     },
     FunctionDefinition: (node) => {
-      traverseArray(node.parameters.parameters, node);
-      traverseArray(node.body.statements, node)
+      traverseNode(node.parameters, node);
+      traverseNode(node.body, node)
+    },
+    ParameterList: (node) => {
+      traverseArray(node.parameters, node);
     },
     ExpressionStatement: (node) => {
       traverseNode(node.expression, node)
+    },
+    IfStatement: (node) => {
+      traverseNode(node.condition, node);
+      traverseNode(node.trueBody, node);
+      traverseNode(node.falseBody, node);
+    },
+    Block: (node) => {
+      traverseArray(node.statements, node)
     },
     VariableDeclarationStatement: (node) => {
       traverseArray(node.variables, node);
@@ -66,6 +77,7 @@ function traverser(ast, visitor) {
     VariableDeclaration: (node) => {
       traverseNode(node.typeName, node)
     },
+    BooleanLiteral: function(){},
     UserDefinedTypeName: function(){},
     ElementaryTypeName: () => {},
     NumberLiteral: () => {},

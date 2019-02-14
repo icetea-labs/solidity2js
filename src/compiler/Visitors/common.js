@@ -1,4 +1,4 @@
-import { identifier,numericLiteral, stringLiteral, memberExpression,} from "@babel/types";
+import { identifier,numericLiteral, stringLiteral, memberExpression,booleanLiteral} from "@babel/types";
 
 export default {
     UserDefinedTypeName: function (node, parent) {
@@ -27,6 +27,9 @@ export default {
             identifier(node.memberName)
         ))
     },
+    BooleanLiteral: function (node, parent) {
+        parent._context.push(booleanLiteral(node.value));
+    }
 }
 
 
@@ -37,5 +40,4 @@ export default {
 /**
 Tasks:
 + Struct - user defined type name
-+ At the moment, every variable doesn't have a TYPE 
  */

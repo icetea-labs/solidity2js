@@ -13,13 +13,22 @@ contract SimpleStore {
     uint value2 = human++;
     value2 = value2 + 3;
     value = value2;
-    value++;
+    ++value;
+    if(true) {
+      value2 = value2 + 3;
+      value = value2;
+    }else {
+      uint value2 = human++;
+      value2 = value2 + 3;
+      value = value2;
+      ++value;
+    }
   }
   function get() public view returns (uint, uint) {
     value++;
     return value + 1;
   }
-  function name() public payable {
+  function name(uint _value, uint _value1) public payable {
   	value = 1;
   }
 }`
