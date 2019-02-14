@@ -15,9 +15,9 @@ contract SimpleStore {
   //   value = value2;
   //   //value++;
   // }
-  // function get() public view returns (uint, uint) {
-  //   return (value, 1);
-  // }
+  function get() public view returns (uint, uint) {
+    return value + 1;
+  }
   function name() public payable {
   	value = 1;
   }

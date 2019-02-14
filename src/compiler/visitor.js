@@ -1,7 +1,7 @@
 import { identifier, classDeclaration, classBody, classProperty, 
         classPrivateProperty , PrivateName, numericLiteral, stringLiteral,
-        classMethod, blockStatement,
-        assignmentExpression, expressionStatement, memberExpression} from "@babel/types";
+        classMethod, blockStatement, binaryExpression,
+        assignmentExpression, expressionStatement, memberExpression, returnStatement} from "@babel/types";
 
 export default {
     PragmaDirective: function(node, parent) {
@@ -91,10 +91,10 @@ export default {
     },
     
     ExpressionStatement: function(node, parent) {
-        node._context = {}
+        node._context = [];
     },
     'ExpressionStatement:exit': function(node, parent) {
-        parent._context.block.push(node._context)
+        parent._context.block.push(node._context[0])
     },
     BinaryOperation: function(node, parent) {
         node._context = [];
@@ -102,13 +102,19 @@ export default {
     'BinaryOperation:exit': function(node, parent) {
         switch (node.operator) {
             case '=':
-                parent._context = expressionStatement(
+                let expressionNode = expressionStatement(
                     assignmentExpression('=',node._context[0],node._context[1])
                 )
+                parent._context.push(expressionNode);
                 break;
-        
+            case '+':
+                let expression = binaryExpression(
+                    '+', node._context[0],node._context[1]
+                )
+                parent._context.push(expression);
+                break;
             default:
-                break;
+                break; 
         }
         
     },
@@ -124,6 +130,12 @@ export default {
             identifier(node.memberName)
         ))
     },
+    ReturnStatement: function (node, parent) {
+        node._context = [];
+    },
+    'ReturnStatement:exit': function(node, parent) {
+        parent._context.block.push(returnStatement(node._context[0]))
+    }
 
 
 }   

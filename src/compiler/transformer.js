@@ -42,6 +42,9 @@ function traverser(ast, visitor) {
     ExpressionStatement: (node) => {
       traverseNode(node.expression, node)
     },
+    ReturnStatement: (node) => {
+      traverseNode(node.expression, node)
+    },
     BinaryOperation: (node) => {
       traverseNode(node.left, node);
       traverseNode(node.right, node);	
