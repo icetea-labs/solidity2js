@@ -44,6 +44,7 @@ export default {
         Status: Only support fully For statement (include all 3 expressions) at the moment
         Task: Investigate about how all possible kind of thoes 3 expressions
         empty
+        another empty
          */
         //Hard Code!
         if(node._context[0].type === 'ExpressionStatement')
