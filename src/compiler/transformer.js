@@ -39,7 +39,11 @@ function traverser(ast, visitor) {
     },
     FunctionDefinition: (node) => {
       traverseNode(node.parameters, node);
-      traverseNode(node.body, node)
+      traverseNode(node.body, node);
+    },
+    FunctionCall: (node) => {
+      traverseNode(node.expression, node);
+      traverseArray(node.arguments, node);
     },
     ParameterList: (node) => {
       traverseArray(node.parameters, node);
@@ -47,6 +51,13 @@ function traverser(ast, visitor) {
     ExpressionStatement: (node) => {
       traverseNode(node.expression, node)
     },
+    ForStatement: (node) => {
+      traverseNode(node.initExpression, node);
+      traverseNode(node.conditionExpression, node);
+      traverseNode(node.loopExpression.expression, node);
+      traverseNode(node.body, node);
+    }
+    ,
     IfStatement: (node) => {
       traverseNode(node.condition, node);
       traverseNode(node.trueBody, node);
@@ -67,6 +78,9 @@ function traverser(ast, visitor) {
       traverseArray(node.variables, node);
       traverseNode(node.initialValue, node)
     },
+    VariableDeclaration: (node) => {
+      traverseNode(node.typeName, node)
+    },
     ReturnStatement: (node) => {
       traverseNode(node.expression, node)
     },
@@ -82,9 +96,7 @@ function traverser(ast, visitor) {
       traverseNode(node.expression, node)
     },
     PragmaDirective: () => {},
-    VariableDeclaration: (node) => {
-      traverseNode(node.typeName, node)
-    },
+    
     BooleanLiteral: function(){},
     UserDefinedTypeName: function(){},
     ElementaryTypeName: () => {},

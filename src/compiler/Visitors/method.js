@@ -1,14 +1,9 @@
-import { classMethod, blockStatement, identifier, returnStatement, expressionStatement } from "@babel/types";
+import { classMethod, blockStatement, identifier, returnStatement, expressionStatement, callExpression } from "@babel/types";
 export default {
     FunctionDefinition: function (node, parent) {
-        // node._context = {
-        //     params: [],
-        //     block: []
-        // }
         node._context = [];
     },
     'FunctionDefinition:exit': function (node, parent) {
-        // let methodNode = classMethod()
         let isConstructor = node.isConstructor;
         let methodNode;
         if(isConstructor) {
@@ -55,5 +50,16 @@ export default {
     },
     'Parameter': function (node, parent) {
         parent._context.push(identifier(node.name));
+    },
+    'FunctionCall': function (node, parent) {
+        node._context = [];
+    },
+    'FunctionCall:exit': function (node, parent) {
+        let args = node._context.slice(1); 
+        parent._context.push(callExpression(
+            node._context[0],
+            args
+
+        ))
     },
 }
