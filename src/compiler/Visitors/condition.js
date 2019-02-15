@@ -1,4 +1,4 @@
-import {  ifStatement,blockStatement } from "@babel/types";
+import {  ifStatement, whileStatement, doWhileStatement, blockStatement } from "@babel/types";
 
 export default {
     IfStatement: function (node, parent) {
@@ -13,10 +13,27 @@ export default {
             )
         )
     },
-    Block: function(node, parent) {
-        node._context = []
+    WhileStatement: function (node, parent) {
+        node._context = [];
     },
-    'Block:exit': function(node, parent) {
-        parent._context.push(node._context)
-    }
+    'WhileStatement:exit': function (node, parent) {
+        parent._context.push(
+            whileStatement(
+                node._context[0],
+                blockStatement(node._context[1]),
+            )
+        )
+    },
+    DoWhileStatement: function (node, parent) {
+        node._context = [];
+    },
+    'DoWhileStatement:exit': function (node, parent) {
+        parent._context.push(
+            doWhileStatement(
+                node._context[0],
+                blockStatement(node._context[1]),
+            )
+        )
+    },
+    
 }

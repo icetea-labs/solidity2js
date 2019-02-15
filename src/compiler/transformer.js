@@ -52,6 +52,14 @@ function traverser(ast, visitor) {
       traverseNode(node.trueBody, node);
       traverseNode(node.falseBody, node);
     },
+    WhileStatement: (node) => {
+      traverseNode(node.condition, node);
+      traverseNode(node.body, node);
+    },
+    DoWhileStatement: (node) => {
+      traverseNode(node.condition, node);
+      traverseNode(node.body, node);
+    },
     Block: (node) => {
       traverseArray(node.statements, node)
     },

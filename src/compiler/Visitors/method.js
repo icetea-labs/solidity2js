@@ -29,6 +29,12 @@ export default {
         }
         parent._context.push(methodNode)
     },
+    Block: function(node, parent) {
+        node._context = []
+    },
+    'Block:exit': function(node, parent) {
+        parent._context.push(node._context)
+    },
     ExpressionStatement: function(node, parent) {
         node._context = [];
     },

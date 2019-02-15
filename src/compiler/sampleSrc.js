@@ -7,6 +7,9 @@ contract SimpleStore {
     owner = tungduong;
     owner = msg.sender;
     value = _value;
+    while(true) {
+      myMoney++;
+    }
   }
   function set(uint _value) private {
     // require(msg.sender == owner);
