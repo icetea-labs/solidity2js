@@ -5,7 +5,6 @@ export default {
         node._context = [];
     },
     'IfStatement:exit': function (node, parent) {
-        console.log(parent)
         parent._context.push(
             ifStatement(
                 node._context[0],
