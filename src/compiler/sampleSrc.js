@@ -10,6 +10,10 @@ contract SimpleStore {
     while(true) {
       myMoney++;
     }
+    callMeHandsome('tungduong', 20);
+    for(var i = 0; i < n; i++) {
+    	helloWorld();
+    }
   }
   function set(uint _value) private {
     // require(msg.sender == owner);
