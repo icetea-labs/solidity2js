@@ -1,19 +1,19 @@
 export default `pragma solidity ^0.4.18;
 contract SimpleStore {
-  uint private value = 1;
-  address owner;
-  string name = 'tungduong';
+  // uint private value = 1;
+  // address owner;
+  // string name = 'tungduong';
   constructor(uint _value, uint _value1) public {
-    owner = tungduong;
-    owner = msg.sender;
-    value = _value;
-    while(true) {
-      myMoney++;
-    }
-    callMeHandsome('tungduong', 20);
-    for(var i = 0; i < n; i++) {
-    	helloWorld();
-    }
+    // owner = tungduong;
+    // owner = msg.sender;
+    // value = _value;
+    // while(true) {
+    //   myMoney++;
+    // }
+    // callMeHandsome('tungduong', 20);
+    // for(uint i = 0; i<n;i++) {
+    // 	helloWorld();
+    // }
   }
   function set(uint _value) private {
     // require(msg.sender == owner);
@@ -31,11 +31,11 @@ contract SimpleStore {
       ++value;
     }
   }
-  function get() public view returns (uint, uint) {
-    value++;
-    return value + 1;
-  }
-  function name(uint _value, uint _value1) public payable {
-  	value = 1;
-  }
+  // function get() public view returns (uint, uint) {
+  //   value++;
+  //   return value + 1;
+  // }
+  // function name(uint _value, uint _value1) public payable {
+  // 	value = 1;
+  // }
 }`
