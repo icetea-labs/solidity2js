@@ -9,10 +9,11 @@ export default {
             ifStatement(
                 node._context[0],
                 blockStatement(node._context[1]),
-                blockStatement(node._context[2]),
+                node._context[2] === undefined? null : blockStatement(node._context[2])
             )
         )
     },
+
     WhileStatement: function (node, parent) {
         node._context = [];
     },
