@@ -38,15 +38,59 @@ function traverser(ast, visitor) {
       traverseNode(node.initialValue, node)
     },
     FunctionDefinition: (node) => {
-      traverseArray(node.parameters.parameters, node);
-      traverseArray(node.body.statements, node)
+      traverseNode(node.parameters, node);
+      traverseNode(node.body, node);
+    },
+    FunctionCall: (node) => {
+      traverseNode(node.expression, node);
+      traverseArray(node.arguments, node);
+    },
+    ParameterList: (node) => {
+      traverseArray(node.parameters, node);
     },
     ExpressionStatement: (node) => {
       traverseNode(node.expression, node)
     },
+    ForStatement: (node) => {
+      // traverseNode(node.initExpression, node);
+      // traverseNode(node.conditionExpression, node);
+      // traverseNode(node.loopExpression.expression, node);
+      traverseNode(node.initExpressionNode, node);
+      traverseNode(node.conditionExpressionNode, node);
+      traverseNode(node.loopExpressionNode, node);
+      traverseNode(node.body, node);
+    },
+    initExpressionNode: (node) => {
+      traverseNode(node.expression, node);
+    },
+    conditionExpressionNode: (node) => {
+      traverseNode(node.expression, node);
+    },
+    loopExpressionNode: (node) => {
+      traverseNode(node.expression.expression, node);
+    },
+    IfStatement: (node) => {
+      traverseNode(node.condition, node);
+      traverseNode(node.trueBody, node);
+      traverseNode(node.falseBody, node);
+    },
+    WhileStatement: (node) => {
+      traverseNode(node.condition, node);
+      traverseNode(node.body, node);
+    },
+    DoWhileStatement: (node) => {
+      traverseNode(node.condition, node);
+      traverseNode(node.body, node);
+    },
+    Block: (node) => {
+      traverseArray(node.statements, node)
+    },
     VariableDeclarationStatement: (node) => {
       traverseArray(node.variables, node);
       traverseNode(node.initialValue, node)
+    },
+    VariableDeclaration: (node) => {
+      traverseNode(node.typeName, node)
     },
     ReturnStatement: (node) => {
       traverseNode(node.expression, node)
@@ -63,9 +107,8 @@ function traverser(ast, visitor) {
       traverseNode(node.expression, node)
     },
     PragmaDirective: () => {},
-    VariableDeclaration: (node) => {
-      traverseNode(node.typeName, node)
-    },
+    
+    BooleanLiteral: function(){},
     UserDefinedTypeName: function(){},
     ElementaryTypeName: () => {},
     NumberLiteral: () => {},

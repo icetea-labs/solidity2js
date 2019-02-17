@@ -28,7 +28,6 @@ export default {
         node._context = [];
     },
     'VariableDeclarationStatement:exit': function (node, parent) {
-        
         let type = node._context.type;
         switch (type) {
             case 'ElementaryTypeName':
@@ -39,14 +38,12 @@ export default {
                         node._context[0]
                     )]
                 )
-                parent._context.block.push(varNode)
+                parent._context.push(varNode)
                 break;
         
             default:
                 break;
         }
-        
-
     },
     VariableDeclaration: function (node, parent) {
         parent._context.name = node.name;
