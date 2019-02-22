@@ -41,28 +41,12 @@ export default {
     },
 
     'ForStatement:exit': function (node, parent) {
-        /**
-        <DONE>
-        Status: Only support fully For Statement (include all 3 expressions) at the moment
-        Approach: Can change the solidity tree before generating new JS tree. In this case, insert a node before each node
-        contains expressions to hold it. Why, because some of these expressions can be missing!
-        <DONE>
-        <-------------------------->
-        Problem of solidity-parser-antlr: When initExpressions and conditionExpression are missing, it treats loopExpression 
-        as condititonExpression and loopExpression is null
-         */
-        //Hard Code!
-        console.log(node._context)
-        if(node._context[0].type === 'ExpressionStatement')
-            node._context[0] = node._context[0].expression;
         parent._context.push(
             forStatement(
                 node._context[0],
                 node._context[1],
                 node._context[2],
                 blockStatement(node._context[3]),
-
-
             )
         )
     },
@@ -70,6 +54,8 @@ export default {
         node._context = []
     },
     'initExpressionNode:exit': function (node, parent) {
+        if(node._context[0] && node._context[0].type === 'ExpressionStatement')
+            node._context[0] = node._context[0].expression;
         parent._context.push(node._context[0])
     },
     conditionExpressionNode: function (node, parent) {

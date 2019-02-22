@@ -1,14 +1,16 @@
 import parser from 'solidity-parser-antlr';
 import generate from '@babel/generator';
 import transformer from './transformer';
+import fs from 'fs'
 function formalizeSolidityAST (ast) {
-  /**
-  ForStatement: adding a AST node to 3 expressions of the for statement
-   */
-    parser.visit(ast, {
-        ForStatement: function (node) {
-            node.initExpressionNode = {
 
+    parser.visit(ast, {
+        /**
+        ForStatement: adding AST nodes holding 3 expressions node of the for statement, for easy transforming later
+        */
+        ForStatement: function (node) {
+        
+            node.initExpressionNode = {
                 type: 'initExpressionNode',
                 expression: node.initExpression
             }

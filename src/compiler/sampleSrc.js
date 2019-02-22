@@ -1,13 +1,9 @@
-export default `pragma solidity ^0.4.18;
+export default `
 contract SimpleStore {
-  // uint private value = 1;
-  // address owner;
-  // string name = 'tungduong';
-  constructor(uint _value, uint _value1) public {
-    if(true) {
 
-    } else {
-
+  constructor()  {
+    for(;;i++){
+      
     }
   }
   function set(uint _value) private {
