@@ -1,4 +1,5 @@
-import { classMethod, blockStatement, identifier, returnStatement, expressionStatement, callExpression } from "@babel/types";
+import { classMethod, blockStatement, identifier, returnStatement, 
+        expressionStatement, callExpression } from "@babel/types";
 export default {
     FunctionDefinition: function (node, parent) {
         node._context = [];
@@ -23,6 +24,19 @@ export default {
             );
         }
         parent._context.push(methodNode)
+    },
+    ModifierDefinition: function (node, parent) {
+        node._context = [];
+    },
+    'ModifierDefinition:exit': function (node, parent) {
+        node._context[0].push(identifier('callback'));
+        let modifierNode = classMethod(
+                'method', 
+                identifier(node.name),
+                node._context[0],
+                blockStatement(node._context[1])
+            );
+        parent._context.push(modifierNode);
     },
     Block: function(node, parent) {
         node._context = []

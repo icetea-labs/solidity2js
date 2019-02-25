@@ -6,6 +6,13 @@ contract SimpleStore {
       
     }
   }
+  modifier onlyOwner(uint _value) {
+        require(
+            msg.sender == owner,
+            "Only owner can call this function."
+        );
+        _;
+    }
   function set(uint _value) private {
     // require(msg.sender == owner);
     if(true) {

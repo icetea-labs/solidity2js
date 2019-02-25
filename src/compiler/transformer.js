@@ -52,9 +52,6 @@ function traverser(ast, visitor) {
       traverseNode(node.expression, node)
     },
     ForStatement: (node) => {
-      // traverseNode(node.initExpression, node);
-      // traverseNode(node.conditionExpression, node);
-      // traverseNode(node.loopExpression.expression, node);
       traverseNode(node.initExpressionNode, node);
       traverseNode(node.conditionExpressionNode, node);
       traverseNode(node.loopExpressionNode, node);
@@ -82,6 +79,11 @@ function traverser(ast, visitor) {
       traverseNode(node.condition, node);
       traverseNode(node.body, node);
     },
+    ModifierDefinition: (node) => {
+      traverseNode(node.parameters, node);
+      traverseNode(node.body, node);
+    }
+    ,
     Block: (node) => {
       traverseArray(node.statements, node)
     },
