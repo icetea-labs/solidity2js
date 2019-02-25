@@ -1,5 +1,17 @@
 import { classMethod, blockStatement, identifier, returnStatement, 
         expressionStatement, callExpression } from "@babel/types";
+function addCallBackInModifier(node) {
+    // replace `_;` statements inside modifier by `callback()`
+    node.forEach((value, index) => {
+        if(value.type === "ExpressionStatement" && value.expression.name === '_') {
+            value.expression = callExpression(
+                identifier('callback'),
+                []
+            )
+        }
+    });
+
+}
 export default {
     FunctionDefinition: function (node, parent) {
         node._context = [];
@@ -30,6 +42,9 @@ export default {
     },
     'ModifierDefinition:exit': function (node, parent) {
         node._context[0].push(identifier('callback'));
+        
+        addCallBackInModifier(node._context[1])
+        console.log(node._context[1])
         let modifierNode = classMethod(
                 'method', 
                 identifier(node.name),
@@ -70,6 +85,7 @@ export default {
     },
     'FunctionCall:exit': function (node, parent) {
         let args = node._context.slice(1); 
+    
         parent._context.push(callExpression(
             node._context[0],
             args
