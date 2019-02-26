@@ -1,6 +1,6 @@
 import { classMethod, blockStatement, identifier, returnStatement, 
-        expressionStatement, callExpression } from "@babel/types";
-function addCallBackInModifier(node) {
+        expressionStatement, callExpression, functionDeclaration } from "@babel/types";
+function addCallBack(node) {
     // replace `_;` statements inside modifier by `callback()`
     node.forEach((value, index) => {
         if(value.type === "ExpressionStatement" && value.expression.name === '_') {
@@ -10,29 +10,47 @@ function addCallBackInModifier(node) {
             )
         }
     });
-
 }
 export default {
     FunctionDefinition: function (node, parent) {
         node._context = [];
+        node._context.modifiers = [];
     },
     'FunctionDefinition:exit': function (node, parent) {
         let isConstructor = node.isConstructor;
+        let hasModifier = node.modifiers.length !== 0 ? true:false;
         let methodNode;
+        let functionParams = node._context[0];
+        let functionBody = blockStatement(node._context[1]);
+        if(hasModifier) {
+            let blockBody = []
+            let nestedFunction = functionDeclaration(
+                identifier('nestedFunction'),
+                functionParams,
+                functionBody
+            )
+            blockBody.push(nestedFunction);
+            node._context.modifiers.forEach(element => {
+                element.arguments.push(identifier('nestedFunction'))
+                blockBody.push(expressionStatement(element))
+            });
+            functionBody = blockStatement(blockBody);
+        }
+        //FUTURE update: throw warning when users try to use the 'nestedFunction'
         if(isConstructor) {
             methodNode = classMethod(
                 "constructor", 
                 identifier("constructor"),
-                node._context[0],
-                blockStatement(node._context[1])
+                functionParams,
+                functionBody
             );
         }
         else {
             methodNode = classMethod(
                 'method', 
                 identifier(node.name),
-                node._context[0],
-                blockStatement(node._context[1])
+                functionParams,
+                functionBody
             );
         }
         parent._context.push(methodNode)
@@ -42,9 +60,7 @@ export default {
     },
     'ModifierDefinition:exit': function (node, parent) {
         node._context[0].push(identifier('callback'));
-        
-        addCallBackInModifier(node._context[1])
-        console.log(node._context[1])
+        addCallBack(node._context[1])
         let modifierNode = classMethod(
                 'method', 
                 identifier(node.name),
@@ -52,6 +68,15 @@ export default {
                 blockStatement(node._context[1])
             );
         parent._context.push(modifierNode);
+    },
+    ModifierInvocation: function (node, parent) {
+        node._context = [];
+    },
+    'ModifierInvocation:exit': function (node, parent) {
+        parent._context.modifiers.push(callExpression(
+            identifier(node.name),
+            node._context
+        ))
     },
     Block: function(node, parent) {
         node._context = []

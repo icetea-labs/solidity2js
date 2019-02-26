@@ -40,6 +40,14 @@ function traverser(ast, visitor) {
     FunctionDefinition: (node) => {
       traverseNode(node.parameters, node);
       traverseNode(node.body, node);
+      traverseArray(node.modifiers, node);
+    },
+    ModifierDefinition: (node) => {
+      traverseNode(node.parameters, node);
+      traverseNode(node.body, node);
+    },
+    ModifierInvocation: (node) => {
+      traverseArray(node.arguments, node)
     },
     FunctionCall: (node) => {
       traverseNode(node.expression, node);
@@ -79,11 +87,6 @@ function traverser(ast, visitor) {
       traverseNode(node.condition, node);
       traverseNode(node.body, node);
     },
-    ModifierDefinition: (node) => {
-      traverseNode(node.parameters, node);
-      traverseNode(node.body, node);
-    }
-    ,
     Block: (node) => {
       traverseArray(node.statements, node)
     },

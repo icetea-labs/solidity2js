@@ -13,7 +13,7 @@ contract SimpleStore {
         );
         _;
     }
-  function set(uint _value) private {
+  function set(uint _value) private onlyOwner(_value) onlyOwner1(_value){
     // require(msg.sender == owner);
     if(true) {
       callMe();
