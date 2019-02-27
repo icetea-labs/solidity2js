@@ -23,7 +23,7 @@ export default {
         let functionParams = node._context[0];
         let functionBody = blockStatement(node._context[1]);
         if(hasModifier) {
-            let blockBody = []
+            let blockBody = [];
             let nestedFunction = functionDeclaration(
                 identifier('nestedFunction'),
                 functionParams,
@@ -36,7 +36,7 @@ export default {
             });
             functionBody = blockStatement(blockBody);
         }
-        //FUTURE update: throw warning when users try to use the 'nestedFunction'
+        //FUTURE update: throw warning when user try to name another function or variable under the 'nestedFunction'
         if(isConstructor) {
             methodNode = classMethod(
                 "constructor", 
@@ -88,7 +88,10 @@ export default {
         node._context = [];
     },
     'ExpressionStatement:exit': function(node, parent) {
-        parent._context.push(expressionStatement(node._context[0]))
+        if(node._context[0]) {
+            parent._context.push(expressionStatement(node._context[0]))
+        }
+        
     },
     ReturnStatement: function (node, parent) {
         node._context = [];

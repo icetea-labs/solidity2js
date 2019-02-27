@@ -1,16 +1,17 @@
-/**
-operators are not supported yet: 
-    '|=',
-    '^=',
-    '<<=',
-    '>>=',
- */
-import {  binaryExpression,updateExpression,assignmentExpression, logicalExpression } from "@babel/types";
+import {  binaryExpression, updateExpression, assignmentExpression, 
+        logicalExpression, unaryExpression } from "@babel/types";
 export default {
     BinaryOperation: function(node, parent) {
         node._context = [];
     },
     'BinaryOperation:exit': function(node, parent) {
+    /**
+    operators are not supported yet: 
+        '|=',
+        '^=',
+        '<<=',
+        '>>=',
+    */
         let operator = node.operator;
         let assignmentOps = [
             '+=',
@@ -62,21 +63,27 @@ export default {
             parent._context.push(expression);
             return;
         }
+        console.log(`'${operator}' operator is not supported yet!`)
     },
     UnaryOperation: function (node, parent) {
         node._context = [];
     },
     'UnaryOperation:exit': function (node, parent) {
-        var prefix = node.isPrefix;
-        switch (node.operator) {
-            case '++':
-                parent._context.push(updateExpression('++', node._context[0], prefix))
-                break;
-            case '--':
-                parent._context.push(updateExpression('--', node._context[0], prefix))
-                break;
-            default:
-                break;
+        /**
+        operators are not supported yet: 
+            'after', 'delete'
+        */
+        let prefix = node.isPrefix;
+        let operator = node.operator;
+        let supportedOps = ['+', '-', '!', '~','++', '--']; 
+        if(operator === '++' || operator === '--') {
+            parent._context.push(updateExpression(operator, node._context[0], prefix))
+        }
+        else if(supportedOps.includes(operator)) {
+            parent._context.push(unaryExpression(operator, node._context[0]))
+        }
+        else {
+            console.log(`'${operator}' operator is not supported yet!`)
         }
     }
 }

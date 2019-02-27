@@ -3,7 +3,7 @@ contract SimpleStore {
 
   constructor()  {
     for(;;i++){
-      
+      delete i;
     }
   }
   modifier onlyOwner(uint _value) {
