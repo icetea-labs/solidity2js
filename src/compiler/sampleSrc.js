@@ -1,9 +1,9 @@
 export default `
 contract SimpleStore {
-
+  uint[] public a = [1,2,3]; 
   constructor()  {
     for(;;i++){
-      delete i;
+
     }
   }
   modifier onlyOwner(uint _value) {

@@ -116,6 +116,12 @@ function traverser(ast, visitor) {
     BooleanLiteral: function(){},
     UserDefinedTypeName: function(){},
     ElementaryTypeName: () => {},
+    ArrayTypeName: (node) => {
+      traverseNode(node.baseTypeName, node);
+    },
+    TupleExpression: (node) => {
+      traverseArray(node.components, node)
+    },
     NumberLiteral: () => {},
     StringLiteral: () => {},
     Parameter: () => {},

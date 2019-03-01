@@ -1,4 +1,5 @@
-import { identifier,numericLiteral, stringLiteral, memberExpression,booleanLiteral} from "@babel/types";
+import { identifier, numericLiteral, stringLiteral, memberExpression,
+        booleanLiteral, arrayExpression} from "@babel/types";
 
 export default {
     UserDefinedTypeName: function (node, parent) {
@@ -6,6 +7,23 @@ export default {
     },
     ElementaryTypeName: function (node, parent) {
         parent._context.type = node.type;
+    },
+    ArrayTypeName: function (node, parent) {
+        node._context = [];
+    },
+    'ArrayTypeName:exit': function (node, parent) {
+          
+    },
+    TupleExpression: function (node, parent) {
+        node._context = [];
+    },
+    'TupleExpression:exit': function (node, parent) {
+        let isArray = node.isArray;
+        if(isArray) {
+            parent._context.push(arrayExpression(node._context))
+        } else {
+            console.log('Javascript does not support Tupple data structure!')
+        }
     },
     NumberLiteral: function (node, parent) {
         let number = parseInt(node.number);

@@ -42,6 +42,7 @@ export default {
                 break;
         
             default:
+                console.log(`type ${type} is not yet supported`)
                 break;
         }
     },
