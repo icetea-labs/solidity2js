@@ -3,7 +3,8 @@ import { identifier, numericLiteral, stringLiteral, memberExpression,
 
 export default {
     UserDefinedTypeName: function (node, parent) {
-        parent._context.type = node.namePath;
+        parent._context.type = node.type;
+        parent._context.definedType = node.namePath;
     },
     ElementaryTypeName: function (node, parent) {
         parent._context.type = node.type;

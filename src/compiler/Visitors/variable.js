@@ -1,5 +1,6 @@
 import { classPrivateProperty , PrivateName, classProperty, 
-        variableDeclaration, variableDeclarator, identifier, arrayExpression } from "@babel/types";
+        variableDeclaration, variableDeclarator, identifier, 
+        arrayExpression, newExpression } from "@babel/types";
 export default {
     StateVariableDeclaration: function (node, parent) {
         node._context = [];
@@ -53,8 +54,16 @@ export default {
                 )
                 parent._context.push(varNode)
                 break;
-           
-
+            case 'UserDefinedTypeName':
+                let newObjNode = variableDeclaration(
+                    'var', 
+                    [variableDeclarator(
+                        identifier(node._context.name) , 
+                        newExpression(identifier(node._context.definedType),[])
+                    )]
+                )
+                parent._context.push(newObjNode);
+                break;
             default:
                 console.log(`type ${type} is not yet supported`)
                 break;

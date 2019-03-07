@@ -5,6 +5,7 @@ contract SimpleStore {
     for(;;i++){
       a[1];
       uint[] numbers;
+      Human human;
     }
   }
   modifier onlyOwner(uint _value) {
