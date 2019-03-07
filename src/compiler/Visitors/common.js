@@ -9,10 +9,8 @@ export default {
         parent._context.type = node.type;
     },
     ArrayTypeName: function (node, parent) {
+        parent._context.type = node.type;
         node._context = [];
-    },
-    'ArrayTypeName:exit': function (node, parent) {
-          
     },
     TupleExpression: function (node, parent) {
         node._context = [];
@@ -24,6 +22,15 @@ export default {
         } else {
             console.log('Javascript does not support Tupple data structure!')
         }
+    },
+    IndexAccess: function (node, parent) {
+        node._context = [];
+    },
+    'IndexAccess:exit': function (node, parent) {
+        let base = node._context[0];
+        let index = node._context[1];
+        let memberExpressionNode = memberExpression(base, index, true)
+        parent._context.push(memberExpressionNode);
     },
     NumberLiteral: function (node, parent) {
         let number = parseInt(node.number);

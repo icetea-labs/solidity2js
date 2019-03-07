@@ -111,8 +111,11 @@ function traverser(ast, visitor) {
     MemberAccess: (node) => {
       traverseNode(node.expression, node)
     },
+    IndexAccess: (node) => {
+      traverseNode(node.base, node);
+      traverseNode(node.index, node);
+    },
     PragmaDirective: () => {},
-    
     BooleanLiteral: function(){},
     UserDefinedTypeName: function(){},
     ElementaryTypeName: () => {},

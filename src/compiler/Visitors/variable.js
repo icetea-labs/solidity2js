@@ -1,10 +1,11 @@
 import { classPrivateProperty , PrivateName, classProperty, 
-        variableDeclaration, variableDeclarator,identifier } from "@babel/types";
+        variableDeclaration, variableDeclarator, identifier, arrayExpression } from "@babel/types";
 export default {
     StateVariableDeclaration: function (node, parent) {
         node._context = [];
     },
     'StateVariableDeclaration:exit': function (node, parent) {
+        //add decorator @state
         let visibility = node.variables[0].visibility;
         if ( visibility === 'private') {
             const privateProp = classPrivateProperty(
@@ -30,6 +31,18 @@ export default {
     'VariableDeclarationStatement:exit': function (node, parent) {
         let type = node._context.type;
         switch (type) {
+            case 'ArrayTypeName':
+                // initial array
+                let value = node._context[0]? node._context[0]:arrayExpression([])
+                let arrayNode = variableDeclaration(
+                    'var', 
+                    [variableDeclarator(
+                        identifier(node._context.name) , 
+                        value
+                    )]
+                )
+                parent._context.push(arrayNode)
+                break;
             case 'ElementaryTypeName':
                 let varNode = variableDeclaration(
                     'var', 
@@ -40,7 +53,8 @@ export default {
                 )
                 parent._context.push(varNode)
                 break;
-        
+           
+
             default:
                 console.log(`type ${type} is not yet supported`)
                 break;

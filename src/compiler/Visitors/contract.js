@@ -1,5 +1,6 @@
 import { classDeclaration, classBody, identifier } from "@babel/types";
 export default {
+    //add @contract 
     ContractDefinition: function(node, parent) {
         const classNode = classDeclaration (
             identifier(node.name),
