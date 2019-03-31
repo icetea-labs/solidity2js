@@ -21,7 +21,8 @@ export default {
         let hasModifier = node.modifiers.length !== 0 ? true:false;
         let methodNode;
         let functionParams = node._context[0];
-        let functionBody = blockStatement(node._context[1]);
+        // wrap function's body inside a block statement. Check if it is null because block statement require an array.
+        let functionBody = node._context[1] ? blockStatement(node._context[1]):blockStatement([]);
         if(hasModifier) {
             let blockBody = [];
             let nestedFunction = functionDeclaration(

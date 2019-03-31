@@ -70,6 +70,11 @@ export default {
         }
     },
     VariableDeclaration: function (node, parent) {
+        /**
+        FUTURE: <refactor code> moving 'variable declaration' from VariableDeclarationStatement to here.
+        Obviously from this part, there is no initial value so if it does present, I will update it in the VariableDeclarationStatement
+         */
+        
         parent._context.name = node.name;
         node._context = parent._context
     },

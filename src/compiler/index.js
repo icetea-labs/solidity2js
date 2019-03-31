@@ -5,7 +5,8 @@ function formalizeSolidityAST (ast) {
 
     parser.visit(ast, {
         /**
-        ForStatement: adding AST nodes holding 3 expressions node of the forStatement node, for easy transforming later.
+        ForStatement: adding AST nodes holding 3 expressions node of the forStatement node,
+        for easy transforming later.
         */
         ForStatement: function (node) {
         
@@ -32,7 +33,7 @@ export function compile(soliditySrc) {
 
         formalizeSolidityAST(solidityAst);
         const JsAst = transformer(solidityAst);
-
+        console.log(JsAst);
 
         const jsSrc = generate(JsAst).code;
         return jsSrc;

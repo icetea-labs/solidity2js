@@ -10,7 +10,8 @@ import 'brace/mode/javascript';
 import 'brace/theme/github';
 
 import {compile} from './compiler';
-import sampleSrc from './compiler/sampleSrc'
+// import sampleSrc from './soliditySource/sampleSrc'
+import sampleSrc from './soliditySource/erc20'
 
 class App extends Component {
   constructor(props) {

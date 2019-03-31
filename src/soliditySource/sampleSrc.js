@@ -1,4 +1,5 @@
 export default `
+pragma solidity ^0.4.0;
 contract SimpleStore {
   uint[] public a = [1,2,3]; 
   constructor()  {
