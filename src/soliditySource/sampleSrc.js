@@ -1,32 +1,22 @@
 export default `
-pragma solidity ^0.4.0;
-contract SimpleStore {
-  uint[] public a = [1,2,3]; 
-  constructor()  {
-    for(;;i++){
-      a[1];
-      uint[] numbers;
-      Human human;
-    }
+pragma solidity ^0.4.22;
+
+contract Oracle {
+  // struct Request {
+  //   bytes data;
+  //   function(bytes memory) external callback;
+  // }
+  Request[] requests;
+  // event NewRequest(uint);
+  function query(bytes data, function(bytes memory) external callback) public {
+    requests.push(Request(data, callback));
+    request newRequest = Request(data, callback);
+    uint[] arr;
+    // emit NewRequest(requests.length - 1);
   }
-  modifier onlyOwner(uint _value) {
-        require(
-            msg.sender == owner,
-            "Only owner can call this function."
-        );
-        _;
-    }
-  function set(uint _value) private onlyOwner(_value) onlyOwner1(_value){
-    require(msg.sender == owner);
-    if(true) {
-      callMe();
-    } 
+  function reply(uint requestID, bytes response) public {
+    // Here goes the check that the reply comes from a trusted source
+    requests[requestID].callback(response);
   }
-  function get() public view returns (uint, uint) {
-    value++;
-    return value + 1;
-  }
-  function name(uint _value, uint _value1) public payable {
-  	value = 1;
-  }
-}`
+}
+`

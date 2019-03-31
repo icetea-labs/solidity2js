@@ -37,6 +37,17 @@ function traverser(ast, visitor) {
       traverseArray(node.variables, node);
       traverseNode(node.initialValue, node)
     },
+    VariableDeclarationStatement: (node) => {
+      traverseArray(node.variables, node);
+      traverseNode(node.initialValue, node);
+      if(node.initialValue && node.initialValue.arguments) {
+        traverseArray(node.initialValue.arguments, node);
+      }
+        
+    },
+    VariableDeclaration: (node) => {
+      traverseNode(node.typeName, node)
+    },
     FunctionDefinition: (node) => {
       traverseNode(node.parameters, node);
       traverseNode(node.body, node);
@@ -89,13 +100,6 @@ function traverser(ast, visitor) {
     },
     Block: (node) => {
       traverseArray(node.statements, node)
-    },
-    VariableDeclarationStatement: (node) => {
-      traverseArray(node.variables, node);
-      traverseNode(node.initialValue, node)
-    },
-    VariableDeclaration: (node) => {
-      traverseNode(node.typeName, node)
     },
     ReturnStatement: (node) => {
       traverseNode(node.expression, node)

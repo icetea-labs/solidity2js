@@ -8,12 +8,16 @@ export default {
     'StateVariableDeclaration:exit': function (node, parent) {
         //add decorator @state
         let visibility = node.variables[0].visibility;
+        let isAnArray = node.variables[0].typeName.type;
+        let value = node._context[0];
+        if(!value && isAnArray)
+            value = arrayExpression([])
         if ( visibility === 'private') {
             const privateProp = classPrivateProperty(
                 PrivateName(
                     identifier(node._context.name)
                 ),
-                node._context[0]
+                value
             );
             parent._context.push(privateProp);
         }
@@ -21,7 +25,7 @@ export default {
             // ONLY support Identifier at the moment
             const prop = classProperty(
                 identifier(node._context.name),
-                node._context[0]
+                value
             );
             parent._context.push(prop);
         }
@@ -31,6 +35,7 @@ export default {
     },
     'VariableDeclarationStatement:exit': function (node, parent) {
         let type = node._context.type;
+        let args = node._context.slice(1);
         switch (type) {
             case 'ArrayTypeName':
                 // initial array
@@ -59,7 +64,7 @@ export default {
                     'var', 
                     [variableDeclarator(
                         identifier(node._context.name) , 
-                        newExpression(identifier(node._context.definedType),[])
+                        newExpression(identifier(node._context.definedType),args)
                     )]
                 )
                 parent._context.push(newObjNode);
