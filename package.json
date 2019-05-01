@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.4.4",
     "prettier": "^1.16.1",
     "react": "^16.7.0",
     "react-ace": "^6.3.2",
@@ -27,7 +28,10 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
     "@babel/generator": "^7.3.0",
+    "@babel/preset-env": "^7.4.4",
     "@babel/types": "^7.3.0"
   }
 }

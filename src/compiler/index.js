@@ -30,7 +30,7 @@ export function compile(soliditySrc) {
     try {
 
         const solidityAst = parser.parse(soliditySrc);
-
+        console.log(solidityAst)
         formalizeSolidityAST(solidityAst);
         const JsAst = transformer(solidityAst);
         console.log(JsAst);

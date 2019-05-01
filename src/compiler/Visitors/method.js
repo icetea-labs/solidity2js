@@ -54,7 +54,16 @@ export default {
                 functionBody
             );
         }
+        const commentNode = {
+            "type": "CommentLine",
+            "value": `Pragma  version `,
+        };
+        methodNode.innerComments = []
+        methodNode.innerComments.push(commentNode);
         parent._context.push(methodNode)
+        
+
+        
     },
     ModifierDefinition: function (node, parent) {
         node._context = [];

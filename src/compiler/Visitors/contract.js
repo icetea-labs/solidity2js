@@ -11,9 +11,9 @@ export default {
         node._context = classNode.body.body	;
         parent._context.push(classNode)
     },
-    //add require function 
+    //default adding function require() to contract
     'ContractDefinition:exit': function (node, parent) {
-        var body = blockStatement([
+        let body = blockStatement([
             ifStatement(
                 identifier('!condition'),
                 blockStatement([
@@ -24,7 +24,7 @@ export default {
                 ]),
             )
         ]);
-        var requireMethodNode = classMethod(
+        let requireMethodNode = classMethod(
                 'method', 
                 identifier('require'),
                 [identifier('condition'),identifier('errorMessage')],
@@ -36,6 +36,7 @@ export default {
         const commentNode = {
             "type": "CommentLine",
             "value": `Pragma ${node.name} version ${node.value}`,
+            
         };
         parent.comments.push(commentNode);
         parent.innerComments.push(commentNode);
