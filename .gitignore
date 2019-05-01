@@ -5,8 +5,8 @@
 /playground
 /.pnp
 .pnp.js
-**/src/compiler
-/README.md
+/src/compiler
+
 # testing
 /coverage
 
