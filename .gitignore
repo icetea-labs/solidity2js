@@ -3,9 +3,10 @@
 # dependencies
 /node_modules
 /playground
+/output
 /.pnp
 .pnp.js
-/src/compiler
+
 
 # testing
 /coverage

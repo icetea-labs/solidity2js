@@ -9,7 +9,7 @@ import AceEditor from 'react-ace'
 import 'brace/mode/javascript';
 import 'brace/theme/github';
 
-import {compile} from './lib';
+import {compile} from './compiler';
 import sampleSrc from './soliditySource/sampleSrc'
 // import sampleSrc from './soliditySource/erc20'
 
