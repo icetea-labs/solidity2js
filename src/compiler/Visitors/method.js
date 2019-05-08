@@ -26,7 +26,10 @@ export default {
         let hasModifier = node.modifiers.length !== 0 ? true:false;
         let methodNode;
         let functionParams = node._context[0];
-        // wrap function's body inside a block statement. Check if it is null because block statement require an array.
+        /**
+         * wrap function's body inside a block statement. 
+         * Check whether or not it is null because block statement requires an array.
+         */
         let functionBody = node._context[1] ? blockStatement(node._context[1]):blockStatement([]);
         if(hasModifier) {
             let blockBody = [];
@@ -54,6 +57,7 @@ export default {
         else {
             /**
              * solidity fallback function 
+             * naming this no-name function as `_fallback`
              */
             if(isFallback){
                 let decorator = addDecorator('onReceived');
@@ -62,6 +66,7 @@ export default {
             } 
             /**
              * state mutability: ['view', 'pure','payable']
+             * add decorator: ['@view', '@pure','@transaction'] respectively. `@view` by default.
              */
             let stateMutability = node.stateMutability;
             let decorator;
@@ -76,13 +81,10 @@ export default {
                     break;
                 case 'view':
                 default:
-                    if(isFallback)
-                        break;
                     decorator = addDecorator('view');
                     parent._context.push(decorator);
                     break;
             }
-            
             methodNode = classMethod(
                 'method', 
                 identifier(node.name),
@@ -90,16 +92,6 @@ export default {
                 functionBody
             );
         }
-        const commentNode = {
-            "type": "CommentLine",
-            "value": `Pragma  version `,
-        };
-        methodNode.innerComments = []
-        methodNode.innerComments.push(commentNode);
-        parent._context.push(methodNode)
-        
-
-        
     },
     ModifierDefinition: function (node, parent) {
         node._context = [];
