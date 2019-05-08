@@ -1,8 +1,8 @@
 import {
     classDeclaration, classBody, identifier, classMethod, blockStatement,
-    ifStatement, newExpression, throwStatement
+    ifStatement, newExpression, throwStatement, functionDeclaration
 } from "@babel/types";
-import {addDecorator} from './util';
+import {generateDecorator, generateRequireFunction} from './util';
 
 export default {
     ContractDefinition: function (node, parent) {
@@ -15,32 +15,21 @@ export default {
         /**
          * adding 'contract' decorator: @contract
          */
-        let decorator = addDecorator('contract');
+        let decorator = generateDecorator('contract');
         parent._context.push(decorator);
         
         parent._context.push(classNode);
        
     },
-    //default adding function require() to contract
-    'ContractDefinition:exit': function (node, parent) {
-        let body = blockStatement([
-            ifStatement(
-                identifier('!condition'),
-                blockStatement([
-                    throwStatement(newExpression(
-                        identifier('Error'),
-                        [identifier('errorMessage')]
-                    ))
-                ]),
-            )
-        ]);
-        let requireMethodNode = classMethod(
-            'method',
-            identifier('require'),
-            [identifier('condition'), identifier('errorMessage')],
-            body
-        );
-        node._context.push(requireMethodNode);
+    
+    /**
+     * 
+     * By default, adding function require() to contract.
+     */
+
+    'PragmaDirective:exit': function (node, parent) {
+        let requireFunction = generateRequireFunction();
+        parent._context.push(requireFunction);
     },
     PragmaDirective: function (node, parent) {
         const commentNode = {

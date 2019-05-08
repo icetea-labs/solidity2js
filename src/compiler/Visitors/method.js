@@ -1,6 +1,6 @@
 import { classMethod, blockStatement, identifier, returnStatement, 
         expressionStatement, callExpression, functionDeclaration } from "@babel/types";
-import {addDecorator} from './util';
+import {generateDecorator} from './util';
 
 function addCallBack(node) {
     /**
@@ -60,7 +60,7 @@ export default {
              * naming this no-name function as `_fallback`
              */
             if(isFallback){
-                let decorator = addDecorator('onReceived');
+                let decorator = generateDecorator('onReceived');
                 parent._context.push(decorator);
                 node.name = '_fallback';
             } 
@@ -72,16 +72,16 @@ export default {
             let decorator;
             switch (stateMutability) {
                 case 'pure':
-                    decorator = addDecorator('pure');
+                    decorator = generateDecorator('pure');
                     parent._context.push(decorator);
                     break;
                 case 'payable':
-                    decorator = addDecorator('transaction');
+                    decorator = generateDecorator('transaction');
                     parent._context.push(decorator);
                     break;
                 case 'view':
                 default:
-                    decorator = addDecorator('view');
+                    decorator = generateDecorator('view');
                     parent._context.push(decorator);
                     break;
             }
@@ -92,6 +92,16 @@ export default {
                 functionBody
             );
         }
+        const commentNode = {
+            "type": "CommentLine",
+            "value": `Pragma  version `,
+        };
+        methodNode.innerComments = []
+        methodNode.innerComments.push(commentNode);
+        parent._context.push(methodNode)
+        
+
+        
     },
     ModifierDefinition: function (node, parent) {
         node._context = [];

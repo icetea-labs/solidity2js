@@ -1,7 +1,12 @@
 import parser from 'solidity-parser-antlr';
 import generate from '@babel/generator';
 import transformer from './transformer';
-import prettier from 'prettier';
+import prettier from "prettier/standalone";
+
+const prettierOptions = {
+    parser: "babel",
+    plugins: [require("prettier/parser-babylon")]
+};
 
 function formalizeSolidityAST (ast) {
 
@@ -35,8 +40,8 @@ export function compile(soliditySrc) {
         formalizeSolidityAST(solidityAst);
         const JsAst = transformer(solidityAst);
         const jsSrc = generate(JsAst).code;
-        console.log(prettier)
-        return jsSrc;
+        const formattedSrc =  prettier.format(jsSrc, prettierOptions)
+        return formattedSrc;
 
 
 
