@@ -1,7 +1,11 @@
 import { classMethod, blockStatement, identifier, returnStatement, 
         expressionStatement, callExpression, functionDeclaration } from "@babel/types";
+import {addDecorator} from './util';
+
 function addCallBack(node) {
-    // replace `_;` statements inside modifier by `callback()`
+    /**
+     * replace `_;` statements inside modifier by `callback()`
+     */
     node.forEach((value, index) => {
         if(value.type === "ExpressionStatement" && value.expression.name === '_') {
             value.expression = callExpression(
@@ -18,6 +22,7 @@ export default {
     },
     'FunctionDefinition:exit': function (node, parent) {
         let isConstructor = node.isConstructor;
+        let isFallback = node.name === ''? true:false;
         let hasModifier = node.modifiers.length !== 0 ? true:false;
         let methodNode;
         let functionParams = node._context[0];
@@ -32,7 +37,7 @@ export default {
             )
             blockBody.push(nestedFunction);
             node._context.modifiers.forEach(element => {
-                element.arguments.push(identifier('nestedFunction'))
+                element.arguments.push(identifier('_nestedFunction'))
                 blockBody.push(expressionStatement(element))
             });
             functionBody = blockStatement(blockBody);
@@ -47,6 +52,37 @@ export default {
             );
         }
         else {
+            /**
+             * solidity fallback function 
+             */
+            if(isFallback){
+                let decorator = addDecorator('onReceived');
+                parent._context.push(decorator);
+                node.name = '_fallback';
+            } 
+            /**
+             * state mutability: ['view', 'pure','payable']
+             */
+            let stateMutability = node.stateMutability;
+            let decorator;
+            switch (stateMutability) {
+                case 'pure':
+                    decorator = addDecorator('pure');
+                    parent._context.push(decorator);
+                    break;
+                case 'payable':
+                    decorator = addDecorator('transaction');
+                    parent._context.push(decorator);
+                    break;
+                case 'view':
+                default:
+                    if(isFallback)
+                        break;
+                    decorator = addDecorator('view');
+                    parent._context.push(decorator);
+                    break;
+            }
+            
             methodNode = classMethod(
                 'method', 
                 identifier(node.name),

@@ -32,8 +32,6 @@ export function compile(soliditySrc) {
         const solidityAst = parser.parse(soliditySrc);
         formalizeSolidityAST(solidityAst);
         const JsAst = transformer(solidityAst);
-        console.log('ahihi')
-
         const jsSrc = generate(JsAst).code;
         return jsSrc;
 

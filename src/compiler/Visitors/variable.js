@@ -1,9 +1,13 @@
 import { classPrivateProperty , PrivateName, classProperty, 
         variableDeclaration, variableDeclarator, identifier, 
         arrayExpression, newExpression } from "@babel/types";
+import {addDecorator} from './util';
+
 export default {
     StateVariableDeclaration: function (node, parent) {
         node._context = [];
+        let decorator = addDecorator('state')
+        parent._context.push(decorator)
     },
     'StateVariableDeclaration:exit': function (node, parent) {
         //add decorator @state

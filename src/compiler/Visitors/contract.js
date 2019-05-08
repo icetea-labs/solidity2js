@@ -1,12 +1,10 @@
 import {
     classDeclaration, classBody, identifier, classMethod, blockStatement,
-    ifStatement, newExpression, throwStatement, decorator
+    ifStatement, newExpression, throwStatement
 } from "@babel/types";
-function addDecorator(decoratorName) {
-    return decorator(identifier(decoratorName))
-}
+import {addDecorator} from './util';
+
 export default {
-    //add @contract 
     ContractDefinition: function (node, parent) {
         const classNode = classDeclaration(
             identifier(node.name),
@@ -14,8 +12,13 @@ export default {
             classBody([])
         )
         node._context = classNode.body.body;
-        parent._context.push(addDecorator('contract'))
-        parent._context.push(classNode)
+        /**
+         * adding 'contract' decorator: @contract
+         */
+        let decorator = addDecorator('contract');
+        parent._context.push(decorator);
+        
+        parent._context.push(classNode);
        
     },
     //default adding function require() to contract
