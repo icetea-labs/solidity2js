@@ -19,4 +19,19 @@ contract Oracle {
     requests[requestID].callback(response);
   }
 }
+
+
+
+contract TestContract {
+    // The function below will be called for each message
+    // that is sent to this contract (as there is no other function to call).
+    // However, if Ether is sent to this contract, an exception will occur.
+    // That is because this contract does not have the "payable" modifier.
+    function() { a = 1; }
+    uint[] a;
+    function sum(uint a) {
+    	require(a>1);
+    }
+}
+
 `

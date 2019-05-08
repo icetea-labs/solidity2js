@@ -66,7 +66,8 @@ export default {
             } 
             /**
              * state mutability: ['view', 'pure','payable']
-             * add decorator: ['@view', '@pure','@transaction'] respectively. `@view` by default.
+             * add decorator: ['@view', '@pure','@payable'] respectively. `@view` by default.
+             * what about `@transaction` ??????????????
              */
             let stateMutability = node.stateMutability;
             let decorator;
@@ -76,7 +77,7 @@ export default {
                     parent._context.push(decorator);
                     break;
                 case 'payable':
-                    decorator = generateDecorator('transaction');
+                    decorator = generateDecorator('payable');
                     parent._context.push(decorator);
                     break;
                 case 'view':
@@ -161,7 +162,9 @@ export default {
     },
     'FunctionCall:exit': function (node, parent) {
         let args = node._context.slice(1); 
-    
+        if(node._context[0].name === 'require') {
+            node._context[0].name = 'expect'
+        }
         parent._context.push(callExpression(
             node._context[0],
             args

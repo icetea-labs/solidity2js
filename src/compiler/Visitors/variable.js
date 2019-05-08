@@ -1,7 +1,14 @@
-import { classPrivateProperty , PrivateName, classProperty, 
+import { classPrivateProperty, PrivateName, classProperty, 
         variableDeclaration, variableDeclarator, identifier, 
         arrayExpression, newExpression } from "@babel/types";
 import {generateDecorator} from './util';
+
+/**
+ * array holds all the state variables to generate `this pointer` when referencing to state variables in class method.
+ * feature the future.
+ * for now, end-user manually add `this pointer` themselves.
+ */
+let stateVariables = [];
 
 export default {
     StateVariableDeclaration: function (node, parent) {
@@ -14,6 +21,7 @@ export default {
         let isAnArray = node.variables[0].typeName.type === 'ArrayTypeName'? true:false;
         let value = node._context[0];
         let variableName = node._context.name;
+        stateVariables.push(variableName);
         if(!value && isAnArray) {
             value = arrayExpression([]);
         }
@@ -28,7 +36,6 @@ export default {
             parent._context.push(privateProp);
         }
         else {
-            // ONLY support Identifier at the moment
             const prop = classProperty(
                 identifier(variableName),
                 value
@@ -42,6 +49,7 @@ export default {
     'VariableDeclarationStatement:exit': function (node, parent) {
         let type = node._context.type;
         let args = node._context.slice(1);
+        let variableName = node._context.name;
         switch (type) {
             case 'ArrayTypeName':
                 // initial array
@@ -50,7 +58,7 @@ export default {
                 let arrayNode = variableDeclaration(
                     'let', 
                     [variableDeclarator(
-                        identifier(node._context.name) , 
+                        identifier(variableName) , 
                         value
                     )]
                 )
@@ -61,21 +69,22 @@ export default {
                 let varNode = variableDeclaration(
                     'let', 
                     [variableDeclarator(
-                        identifier(node._context.name) , 
+                        identifier(variableName) , 
                         node._context[0]
                     )]
                 )
                 parent._context.push(varNode)
                 break;
             case 'UserDefinedTypeName':
-                let newObjNode = variableDeclaration(
+                let definedType = node._context.definedType;
+                let newUserDefinedNode = variableDeclaration(
                     'let', 
                     [variableDeclarator(
-                        identifier(node._context.name) , 
-                        newExpression(identifier(node._context.definedType),args)
+                        identifier(variableName) , 
+                        newExpression(identifier(definedType),args)
                     )]
                 )
-                parent._context.push(newObjNode);
+                parent._context.push(newUserDefinedNode);
                 break;
             default:
                 console.log(`type ${type} is not yet supported`)

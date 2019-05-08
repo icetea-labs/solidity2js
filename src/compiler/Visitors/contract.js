@@ -1,7 +1,7 @@
 import {
     classDeclaration, classBody, identifier
 } from "@babel/types";
-import {generateDecorator, generateRequireFunction} from './util';
+import {generateDecorator} from './util';
 
 export default {
     ContractDefinition: function (node, parent) {
@@ -19,16 +19,6 @@ export default {
         
         parent._context.push(classNode);
        
-    },
-    
-    /**
-     * 
-     * By default, adding a function `require()` to contract.
-     */
-
-    'PragmaDirective:exit': function (node, parent) {
-        let requireFunction = generateRequireFunction();
-        parent._context.push(requireFunction);
     },
     PragmaDirective: function (node, parent) {
         const commentNode = {
