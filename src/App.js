@@ -9,8 +9,8 @@ import AceEditor from 'react-ace'
 import 'brace/mode/javascript';
 import 'brace/theme/github';
 
-import {compile} from './lib';
-import sampleSrc from './soliditySource/sampleSrc'
+import {compile} from './compiler';
+import sampleSrc from './soliditySource/erc20'
 // import sampleSrc from './soliditySource/erc20'
 
 class App extends Component {
