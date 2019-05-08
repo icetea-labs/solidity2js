@@ -6,20 +6,22 @@ import {generateDecorator} from './util';
 export default {
     StateVariableDeclaration: function (node, parent) {
         node._context = [];
-        let decorator = generateDecorator('state')
-        parent._context.push(decorator)
+        let decorator = generateDecorator('state');
+        parent._context.push(decorator);
     },
     'StateVariableDeclaration:exit': function (node, parent) {
-        //add decorator @state
         let visibility = node.variables[0].visibility;
-        let isAnArray = node.variables[0].typeName.type;
+        let isAnArray = node.variables[0].typeName.type === 'ArrayTypeName'? true:false;
         let value = node._context[0];
-        if(!value && isAnArray)
-            value = arrayExpression([])
+        let variableName = node._context.name;
+        if(!value && isAnArray) {
+            value = arrayExpression([]);
+        }
+            
         if ( visibility === 'private') {
             const privateProp = classPrivateProperty(
                 PrivateName(
-                    identifier(node._context.name)
+                    identifier(variableName)
                 ),
                 value
             );
@@ -28,7 +30,7 @@ export default {
         else {
             // ONLY support Identifier at the moment
             const prop = classProperty(
-                identifier(node._context.name),
+                identifier(variableName),
                 value
             );
             parent._context.push(prop);
@@ -43,6 +45,7 @@ export default {
         switch (type) {
             case 'ArrayTypeName':
                 // initial array
+                
                 let value = node._context[0]? node._context[0]:arrayExpression([])
                 let arrayNode = variableDeclaration(
                     'let', 
@@ -54,6 +57,7 @@ export default {
                 parent._context.push(arrayNode)
                 break;
             case 'ElementaryTypeName':
+
                 let varNode = variableDeclaration(
                     'let', 
                     [variableDeclarator(

@@ -11,21 +11,21 @@ contract TestContract {
 }
 
 
-// this is a contract, which keeps all Ether to it with not way of 
-// retrieving it.
-contract SinkContract {
-    function() payable { }
-}
+// // this is a contract, which keeps all Ether to it with not way of 
+// // retrieving it.
+// contract SinkContract {
+//     function() payable { }
+// }
 
-contract CallerContract {
-    function testCall(TestContract test) {
-        test.call(0xabcdef01); // hash is non-existent
-        // will result in test.a becoming == 1.
+// contract CallerContract {
+//     function testCall(TestContract test) {
+//         test.call(0xabcdef01); // hash is non-existent
+//         // will result in test.a becoming == 1.
 
-        // The following statement is not going to compile.
-        // But if ether is sent to this contract, the
-        // transaction would fail and the Ether would be rejected
-        //test.send(2 ether);
-    }
-}
+//         // The following statement is not going to compile.
+//         // But if ether is sent to this contract, the
+//         // transaction would fail and the Ether would be rejected
+//         //test.send(2 ether);
+//     }
+// }
 `

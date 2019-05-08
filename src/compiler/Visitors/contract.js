@@ -1,6 +1,5 @@
 import {
-    classDeclaration, classBody, identifier, classMethod, blockStatement,
-    ifStatement, newExpression, throwStatement, functionDeclaration
+    classDeclaration, classBody, identifier
 } from "@babel/types";
 import {generateDecorator, generateRequireFunction} from './util';
 
@@ -24,7 +23,7 @@ export default {
     
     /**
      * 
-     * By default, adding function require() to contract.
+     * By default, adding a function `require()` to contract.
      */
 
     'PragmaDirective:exit': function (node, parent) {
