@@ -29,7 +29,7 @@ This is a super simple solidity smart contract. Here is the code you would acqui
 @contract
 class SimpleStorage {
   @state
-  storedData;
+  #storedData;
   
   @view
   set(x) {
@@ -51,7 +51,7 @@ class SimpleStorage {
 @contract
 class SimpleStorage {
   @state
-  storedData;
+  #storedData;
   
   @transaction
   set(x) {

@@ -4,6 +4,7 @@ import { classPrivateProperty, PrivateName, classProperty,
 import {generateDecorator} from './util';
 
 /**
+ * `WORK TO DO!`
  * array holds all the state variables to generate `this pointer` when referencing to state variables in class method.
  * feature the future.
  * for now, end-user manually add `this pointer` themselves.
@@ -25,23 +26,27 @@ export default {
         if(!value && isAnArray) {
             value = arrayExpression([]);
         }
-            
-        if ( visibility === 'private') {
-            const privateProp = classPrivateProperty(
-                PrivateName(
-                    identifier(variableName)
-                ),
-                value
-            );
-            parent._context.push(privateProp);
+        switch (visibility) {
+            case 'private':
+            case 'default':
+            case 'internal':  
+                const privateProp = classPrivateProperty(
+                    PrivateName(
+                        identifier(variableName)
+                    ),
+                    value
+                );
+                parent._context.push(privateProp);
+                break;
+            default:
+                const prop = classProperty(
+                    identifier(variableName),
+                    value
+                );
+                parent._context.push(prop);
+                break;
         }
-        else {
-            const prop = classProperty(
-                identifier(variableName),
-                value
-            );
-            parent._context.push(prop);
-        }
+        
     },
     VariableDeclarationStatement: function (node, parent) {
         node._context = [];
