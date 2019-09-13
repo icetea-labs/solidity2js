@@ -65,9 +65,10 @@ export default {
                 node.name = '_fallback';
             } 
             /**
-             * state mutability: ['view', 'pure','payable']
+             * state mutability: ['view', 'pure','payable'] `constant` ???
              * add decorator: ['@view', '@pure','@payable'] respectively. `@view` by default.
-             * what about `@transaction` ??????????????
+             * what about `@transaction` : manually adding ??????????????
+             * 
              */
             let stateMutability = node.stateMutability;
             let decorator;

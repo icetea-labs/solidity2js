@@ -9,8 +9,8 @@ import AceEditor from 'react-ace'
 import 'brace/mode/javascript';
 import 'brace/theme/github';
 
-import {compile} from './compiler';
-import sampleSrc from './soliditySource/erc20'
+import { compile } from './compiler';
+import sampleSrc from './soliditySource/simpleStore'
 // import sampleSrc from './soliditySource/erc20'
 
 class App extends Component {
@@ -29,7 +29,7 @@ class App extends Component {
   }
   render() {
     const jsOptions = {
-      readOnly: true,
+      readOnly: false,
       displayIndentGuides: false
     }
     return (
@@ -46,7 +46,7 @@ class App extends Component {
             showPrintMargin={false}
             showGutter={false}
             name="solidityPane"
-            editorProps={{$blockScrolling: true}}
+            editorProps={{blockScrolling: true}}
           />
         </section>
         <section className="pane">
@@ -61,10 +61,11 @@ class App extends Component {
             showPrintMargin={false}
             showGutter={false}
             name="jsPane"
-            editorProps={{$blockScrolling: true}}
+            editorProps={{$blockScrolling: false}}
           />
         </section>
       </Split>
+      
     );
   }
 }

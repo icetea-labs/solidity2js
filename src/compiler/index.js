@@ -12,6 +12,7 @@ function formalizeSolidityAST (ast) {
 
     parser.visit(ast, {
         /**
+         * `PURPOSE`
         ForStatement: adding AST nodes holding 3 expressions node of the forStatement node,
         for easy transforming later.
         */
@@ -40,11 +41,10 @@ export function compile(soliditySrc) {
         formalizeSolidityAST(solidityAst);
         console.log(solidityAst)
         const JsAst = transformer(solidityAst);
+        console.log(JsAst)
         const jsSrc = generate(JsAst).code;
         const formattedSrc =  prettier.format(jsSrc, prettierOptions)
         return formattedSrc;
-
-
 
     } catch (e) {
         return String(e);
